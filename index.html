@@ -3,47 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live TV</title>
+    <title>StreamTheGame</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.20.3/video-js.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/7.20.3/video.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; background: #121212; color: white; }
-        h1 { margin-top: 20px; }
-        #video-container { width: 100%; max-width: 800px; margin: auto; }
-        video { width: 100%; height: auto; background: black; }
-        .channel-list { margin-top: 20px; }
-        .channel { display: block; padding: 10px; margin: 5px; background: #1e1e1e; color: white; text-decoration: none; border-radius: 5px; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: white;
+        }
+        .header {
+            background-color: #1e1e1e;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .telegram-banner {
+            position: fixed;
+            top: 70px;
+            right: 15px;
+            background-color: rgba(0, 136, 204, 0.9);
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        }
+        .telegram-banner img {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        .video-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+        video {
+            width: 90%;
+            max-width: 720px;
+            border-radius: 10px;
+        }
+        .telegram-ad {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff5733, #ffbd33, #33ff57, #3388ff, #a133ff);
+            background-size: 300% 300%;
+            animation: gradientBG 6s ease infinite;
+            border-radius: 10px;
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+            padding: 15px 25px;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
     </style>
 </head>
 <body>
-    <h1>Live TV Streaming</h1>
-    
-    <div id="video-container">
-        <video id="liveStream" controls autoplay></video>
+    <div class="header">StreamTheGame</div>
+
+    <div class="video-container">
+        <video id="my-video" class="video-js vjs-default-skin" controls autoplay preload="auto" playsinline>
+            <!-- Main HLS source -->
+            <source src="https://cdn.hoichoi24.com/TNTSports1HD/tracks-v1a1/mono.ts.m3u8" type="application/x-mpegURL">
+
+            <!-- Optional fallback formats -->
+            <source src="https://example.com/fallback.mp4" type="video/mp4">
+            <source src="https://example.com/fallback.webm" type="video/webm">
+
+            <!-- Fallback message -->
+            Your browser does not support the video tag or the provided formats. Please try a modern browser or download the video.
+        </video>
     </div>
 
-    <h2>Available Channels</h2>
-    <div class="channel-list">
-        <a href="index.html" class="channel">TNT Sports 1 HD</a>
-        <!-- Add more channels here if needed -->
+    <a href="https://t.me/streamthegame" target="_blank" class="telegram-banner">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"> Join Us on Telegram
+    </a>
+
+    <div style="margin-top: 30px;">
+        <a href="https://t.me/streamthegame" target="_blank" class="telegram-ad">
+            🚀 Don't Miss Out! Join Our Telegram for Exclusive Streams! 🎥🔥
+        </a>
     </div>
 
     <script>
-        var video = document.getElementById('liveStream');
-        var videoSrc = "https://cdn.hoichoi24.com/TNTSports1HD/tracks-v1a1/mono.ts.m3u8";
-        
+        // Initialize the video.js player
+        var player = videojs('my-video', {
+            controls: true,
+            autoplay: true,
+            preload: 'auto',
+            fluid: true,
+            responsive: true,
+            playbackRates: [0.5, 1, 1.5, 2]
+        });
+
+        // Check if HLS is supported natively or use HLS.js
         if (Hls.isSupported()) {
             var hls = new Hls();
-            hls.loadSource(videoSrc);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play();
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = videoSrc;
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            });
+            hls.loadSource("https://vps.vffddd.online:8880/adsp1/tracks-v1a1/mono.ts.m3u8");
+            hls.attachMedia(document.getElementById('my-video'));
         }
+
+        player.on('error', function() {
+            console.log('An error occurred while loading the video.');
+        });
     </script>
 </body>
 </html>
